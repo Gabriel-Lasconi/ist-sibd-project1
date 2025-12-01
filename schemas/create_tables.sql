@@ -1,15 +1,12 @@
 -- ============================================================================
 -- SIBD Project 1 – Boat Management System
 -- create_tables.sql
---
---  • Drops existing tables (if any)
 --  • Creates all base tables and basic constraints
---  • Lists, as comments, integrity constraints that cannot be enforced in SQL
 -- ============================================================================
 
--- ---------------------------------------------------------------------------
--- Drop tables in reverse dependency order
--- ---------------------------------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS project;
+SET search_path TO project;
+
 DROP TABLE IF EXISTS certificate_jurisdiction CASCADE;
 DROP TABLE IF EXISTS certificate CASCADE;
 DROP TABLE IF EXISTS trip_jurisdiction CASCADE;
@@ -31,12 +28,12 @@ DROP TABLE IF EXISTS country CASCADE;
 -- Country
 -- ---------------------------------------------------------------------------
 CREATE TABLE country (
-    iso_code   CHAR(3)      PRIMARY KEY,      -- standard ISO code, e.g. 'PRT'
+    iso_code   CHAR(3)      PRIMARY KEY,
     name       VARCHAR(60)  NOT NULL UNIQUE,
-    flag       VARCHAR(200) NOT NULL UNIQUE   -- could be URL or file name
+    flag       VARCHAR(200) NOT NULL UNIQUE
 );
 
--- IC (not enforceable in plain SQL):
+-- IC:
 --  • Any country that registers boats must have at least one location.
 
 -- ---------------------------------------------------------------------------
@@ -52,22 +49,22 @@ CREATE TABLE boat_class (
 -- Boat
 -- ---------------------------------------------------------------------------
 CREATE TABLE boat (
-    cni               VARCHAR(40) PRIMARY KEY,      -- unique national boat id
+    cni               VARCHAR(40) PRIMARY KEY,
     name              VARCHAR(80) NOT NULL,
     length_m          NUMERIC(6,2) NOT NULL CHECK (length_m > 0),
     registration_year INTEGER     NOT NULL
                                  CHECK (registration_year >= 1900),
     class_id          VARCHAR(20) NOT NULL,
-    flag_country      CHAR(3)     NOT NULL,         -- country where it is registered
+    flag_country      CHAR(3)     NOT NULL,
     picture_url       VARCHAR(300),
 
     FOREIGN KEY (class_id)     REFERENCES boat_class(class_id),
     FOREIGN KEY (flag_country) REFERENCES country(iso_code)
 );
 
--- IC (domain-level):
+-- IC:
 --  • For each class, boats must not exceed the maximum length of that class
---    (boat.length_m <= boat_class.max_length_m). This would require a trigger.
+--    (boat.length_m <= boat_class.max_length_m).
 
 -- ---------------------------------------------------------------------------
 -- Sailor
@@ -82,8 +79,7 @@ CREATE TABLE sailor (
 );
 
 -- IC:
---  • Senior sailors have extra responsibilities; some of them are enforced
---    via constraints/comments in reservation_sailor and trip.
+--  • Senior sailors have extra responsibilities;
 
 -- ---------------------------------------------------------------------------
 -- Location
@@ -98,7 +94,7 @@ CREATE TABLE location (
     FOREIGN KEY (iso_code) REFERENCES country(iso_code)
 );
 
--- IC (not implementable with standard constraints):
+-- IC:
 --  • Any two locations in the system must be at least one nautical mile apart.
 
 -- ---------------------------------------------------------------------------
@@ -108,13 +104,12 @@ CREATE TABLE jurisdiction (
     jurisdiction_id SERIAL       PRIMARY KEY,
     name            VARCHAR(80)  NOT NULL,
     kind            VARCHAR(30)  NOT NULL,
-        -- e.g. 'Internal Waters', 'Territorial Sea', 'EEZ', 'International Waters'
-    iso_code        CHAR(3),     -- NULL for 'International Waters'
+    iso_code        CHAR(3),
 
     FOREIGN KEY (iso_code) REFERENCES country(iso_code)
 );
 
--- IC (cross-attribute, hard to enforce in pure SQL):
+-- IC:
 --  • If kind = 'International Waters', iso_code must be NULL;
 --    otherwise iso_code must be NOT NULL.
 
@@ -137,7 +132,7 @@ CREATE TABLE reservation (
     CHECK (end_date >= start_date)
 );
 
--- IC (requires multi-row checks / triggers):
+-- IC:
 --  • Every reservation must include at least one authorized sailor.
 --  • Among the authorized sailors, at least one must be a Senior sailor
 --    who is marked as responsible for the reservation.
@@ -159,7 +154,7 @@ CREATE TABLE reservation_sailor (
     FOREIGN KEY (sailor_id)      REFERENCES sailor(sailor_id)
 );
 
--- IC (requires triggers):
+-- IC :
 --  • For each reservation, at least one row must exist in this table.
 --  • Exactly one authorized sailor per reservation should be responsible.
 --  • Any sailor with is_responsible = TRUE must be of category 'Senior'.
@@ -190,15 +185,12 @@ CREATE TABLE trip (
     CHECK (arrival_date >= takeoff_date)
 );
 
--- IC (requires multi-table logic):
---  • The skipper of a trip must be one of the authorized sailors for the
---    corresponding reservation (i.e., appear in reservation_sailor).
---  • The boat that performs the trip is the boat of the reservation; this
---    is guaranteed only indirectly via reservation.boat_cni.
-
+-- IC:
+--  • The skipper of a trip must be one of the authorized sailors for the corresponding reservation (i.e., appear in reservation_sailor).
+--  • The boat that performs the trip is the boat of the reservation;
 
 -- ---------------------------------------------------------------------------
--- Trip_Jurisdiction – jurisdictions crossed by a trip
+-- Trip_Jurisdiction
 -- ---------------------------------------------------------------------------
 CREATE TABLE trip_jurisdiction (
     trip_id         INTEGER NOT NULL,
@@ -211,17 +203,14 @@ CREATE TABLE trip_jurisdiction (
 );
 
 -- IC:
---  • A trip should list all jurisdictions it navigates in the order they are
---    crossed. Ensuring completeness and correct order requires application
---    logic, not just SQL constraints.
-
+--  • A trip should list all jurisdictions it navigates in the order they are crossed.
 
 -- ===========================================================================
 --  Certificates
 -- ===========================================================================
 
 -- ---------------------------------------------------------------------------
--- Certificate – a personal sailing certification
+-- Certificate
 -- ---------------------------------------------------------------------------
 CREATE TABLE certificate (
     certificate_id  SERIAL      PRIMARY KEY,
@@ -237,15 +226,11 @@ CREATE TABLE certificate (
 );
 
 -- IC:
---  • Certificates authorize the sailor to act as skipper for the given boat
---    class in one or more country jurisdictions (see certificate_jurisdiction).
---  • A sailor should not act as skipper outside the jurisdictions and classes
---    for which he/she holds valid certificates; this cannot be enforced only
---    with constraints on this table.
-
+--  • Certificates authorize the sailor to act as skipper for the given boat class in one or more country jurisdictions.
+--  • A sailor should not act as skipper outside the jurisdictions and classes for which he/she holds valid certificates;
 
 -- ---------------------------------------------------------------------------
--- Certificate_Jurisdiction – coverage of a certificate
+-- Certificate_Jurisdiction
 -- ---------------------------------------------------------------------------
 CREATE TABLE certificate_jurisdiction (
     certificate_id  INTEGER NOT NULL,
@@ -256,5 +241,3 @@ CREATE TABLE certificate_jurisdiction (
     FOREIGN KEY (certificate_id)  REFERENCES certificate(certificate_id),
     FOREIGN KEY (jurisdiction_id) REFERENCES jurisdiction(jurisdiction_id)
 );
-
--- End of create_tables.sql
