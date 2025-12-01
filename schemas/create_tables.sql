@@ -1,7 +1,6 @@
 -- ============================================================================
 -- SIBD Project 1 – Boat Management System
--- create_tables.sql
---  • Creates all base tables and basic constraints
+-- create_tables.sql - Creates all base tables and basic constraints
 -- ============================================================================
 
 CREATE SCHEMA IF NOT EXISTS project;
@@ -34,7 +33,7 @@ CREATE TABLE country (
 );
 
 -- IC:
---  • Any country that registers boats must have at least one location.
+-- Any country that registers boats must have at least one location
 
 -- ---------------------------------------------------------------------------
 -- Boat class
@@ -63,8 +62,7 @@ CREATE TABLE boat (
 );
 
 -- IC:
---  • For each class, boats must not exceed the maximum length of that class
---    (boat.length_m <= boat_class.max_length_m).
+-- For each class, boats must not exceed the maximum length of that class (boat.length_m <= boat_class.max_length_m)
 
 -- ---------------------------------------------------------------------------
 -- Sailor
@@ -79,7 +77,7 @@ CREATE TABLE sailor (
 );
 
 -- IC:
---  • Senior sailors have extra responsibilities;
+-- Senior sailors have extra responsibilities
 
 -- ---------------------------------------------------------------------------
 -- Location
@@ -95,7 +93,7 @@ CREATE TABLE location (
 );
 
 -- IC:
---  • Any two locations in the system must be at least one nautical mile apart.
+-- Any two locations in the system must be at least one nautical mile apart
 
 -- ---------------------------------------------------------------------------
 -- Jurisdiction
@@ -110,9 +108,7 @@ CREATE TABLE jurisdiction (
 );
 
 -- IC:
---  • If kind = 'International Waters', iso_code must be NULL;
---    otherwise iso_code must be NOT NULL.
-
+-- If kind = 'International Waters', iso_code must be NULL; otherwise iso_code must be NOT NULL
 
 -- ===========================================================================
 --  Reservations and participation
@@ -132,15 +128,12 @@ CREATE TABLE reservation (
 );
 
 -- IC:
---  • Every reservation must include at least one authorized sailor.
---  • Among the authorized sailors, at least one must be a Senior sailor
---    who is marked as responsible for the reservation.
---  • Only authorized sailors may navigate or operate the boat during the
---    reservation’s time frame.
-
+-- Every reservation must include at least one authorized sailor
+-- Among the authorized sailors, at least one must be a Senior sailor who is marked as responsible for the reservation
+-- Only authorized sailors may navigate or operate the boat during the reservation’s time frame
 
 -- ---------------------------------------------------------------------------
--- Reservation_Sailor – authorized sailors per reservation
+-- Reservation_Sailor
 -- ---------------------------------------------------------------------------
 CREATE TABLE reservation_sailor (
     reservation_id  INTEGER    NOT NULL,
@@ -154,10 +147,9 @@ CREATE TABLE reservation_sailor (
 );
 
 -- IC :
---  • For each reservation, at least one row must exist in this table.
---  • Exactly one authorized sailor per reservation should be responsible.
---  • Any sailor with is_responsible = TRUE must be of category 'Senior'.
-
+--  For each reservation, at least one row must exist in this table
+--  Exactly one authorized sailor per reservation should be responsible
+--  Any sailor with is_responsible = TRUE must be of category 'Senior'
 
 -- ===========================================================================
 --  Trips
@@ -185,8 +177,8 @@ CREATE TABLE trip (
 );
 
 -- IC:
---  • The skipper of a trip must be one of the authorized sailors for the corresponding reservation (i.e., appear in reservation_sailor).
---  • The boat that performs the trip is the boat of the reservation;
+-- The skipper of a trip must be one of the authorized sailors for the corresponding reservation
+-- The boat that performs the trip is the boat of the reservation
 
 -- ---------------------------------------------------------------------------
 -- Trip_Jurisdiction
@@ -202,7 +194,7 @@ CREATE TABLE trip_jurisdiction (
 );
 
 -- IC:
---  • A trip should list all jurisdictions it navigates in the order they are crossed.
+-- A trip should list all jurisdictions it navigates in the order they are crossed
 
 -- ===========================================================================
 --  Certificates
@@ -225,8 +217,8 @@ CREATE TABLE certificate (
 );
 
 -- IC:
---  • Certificates authorize the sailor to act as skipper for the given boat class in one or more country jurisdictions.
---  • A sailor should not act as skipper outside the jurisdictions and classes for which he/she holds valid certificates;
+-- Certificates authorize the sailor to act as skipper for the given boat class in one or more country jurisdictions
+-- A sailor should not act as skipper outside the jurisdictions and classes for which he/she holds valid certificates
 
 -- ---------------------------------------------------------------------------
 -- Certificate_Jurisdiction
