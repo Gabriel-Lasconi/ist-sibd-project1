@@ -126,7 +126,6 @@ CREATE TABLE reservation (
     boat_cni       VARCHAR(40) NOT NULL,
     start_date     DATE        NOT NULL,
     end_date       DATE        NOT NULL,
-    fast_booking   BOOLEAN     NOT NULL DEFAULT FALSE,
 
     FOREIGN KEY (boat_cni) REFERENCES boat(cni),
     CHECK (end_date >= start_date)
