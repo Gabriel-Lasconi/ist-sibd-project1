@@ -1,6 +1,6 @@
 -- ============================================================================
 -- SIBD Project 1 – Boat Management System
--- create_tables.sql - Creates all base tables and basic constraints
+-- schema.sql - Creates all base tables and basic constraints
 -- ============================================================================
 
 CREATE SCHEMA IF NOT EXISTS project;
