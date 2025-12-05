@@ -25,13 +25,12 @@ DROP TABLE IF EXISTS country CASCADE;
 
 CREATE TABLE country (
     iso_code   CHAR(3)      PRIMARY KEY,
-    name       VARCHAR(60)  NOT NULL UNIQUE,
+    name       VARCHAR(70)  NOT NULL UNIQUE,
     flag       VARCHAR(200) NOT NULL UNIQUE
 );
 
 CREATE TABLE boat_class (
     class_name    VARCHAR(30) PRIMARY KEY,
-    description   VARCHAR(100),
     max_length_m  NUMERIC(6,2) NOT NULL CHECK (max_length_m > 0)
 );
 
@@ -39,9 +38,9 @@ CREATE TABLE boat (
     cni               VARCHAR(40) PRIMARY KEY,
     name              VARCHAR(80) NOT NULL,
     length_m          NUMERIC(6,2) NOT NULL CHECK (length_m > 0),
-    registration_year INTEGER     NOT NULL CHECK (registration_year >= 1900),
+    registration_year INTEGER NOT NULL CHECK (registration_year >= 1900),
     class_name        VARCHAR(30) NOT NULL,
-    flag_iso_code     CHAR(3)     NOT NULL,
+    flag_iso_code     CHAR(3) NOT NULL,
     picture_url       VARCHAR(300),
 
     FOREIGN KEY (class_name)    REFERENCES boat_class(class_name),
@@ -50,9 +49,9 @@ CREATE TABLE boat (
 
 CREATE TABLE sailor (
     sailor_id   SERIAL       PRIMARY KEY,
-    first_name  VARCHAR(40)  NOT NULL,
-    surname     VARCHAR(60)  NOT NULL,
-    email       VARCHAR(120) NOT NULL UNIQUE,
+    first_name  VARCHAR(80)  NOT NULL,
+    surname     VARCHAR(80)  NOT NULL,
+    email       VARCHAR(254) NOT NULL,
     category    VARCHAR(10)  NOT NULL,
     CHECK (category IN ('Senior', 'Junior'))
 );
@@ -69,9 +68,9 @@ CREATE TABLE location (
 
 CREATE TABLE jurisdiction (
     jurisdiction_id SERIAL      PRIMARY KEY,
-    name            VARCHAR(80) NOT NULL,
-    type            VARCHAR(30) NOT NULL,
-    iso_code        CHAR(3),
+    name VARCHAR(80) NOT NULL,
+    type VARCHAR(30) NOT NULL,
+    iso_code CHAR(3),
 
     FOREIGN KEY (iso_code) REFERENCES country(iso_code)
 );
