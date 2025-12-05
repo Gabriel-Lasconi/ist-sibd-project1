@@ -90,7 +90,7 @@ CREATE TABLE reservation (
     FOREIGN KEY (boat_cni) REFERENCES boat(cni)
 );
 
-CREATE TABLE reservation_sailor (
+CREATE TABLE reservation_sailor ( -- let me know if this a good name for the association
     reservation_id  INTEGER  NOT NULL,
     sailor_id       INTEGER  NOT NULL,
     is_responsible  BOOLEAN  NOT NULL DEFAULT FALSE,
