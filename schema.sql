@@ -75,8 +75,7 @@ CREATE TABLE jurisdiction (
     type            VARCHAR(30) NOT NULL,
     iso_code        CHAR(3),
     FOREIGN KEY (iso_code) REFERENCES country(iso_code)
-    -- IC-8: there is exactly one country administering a non-international
-    --       jurisdiction; jurisdictions of type 'International Waters' have no country
+    -- IC-8: there is exactly one country administering a non-international jurisdiction; jurisdictions of type 'International Waters' have no country
 );
 
 -- ============================================================================
@@ -88,7 +87,7 @@ CREATE TABLE reservation (
     boat_cni       VARCHAR(40)  NOT NULL,
     start_date     DATE         NOT NULL,
     end_date       DATE         NOT NULL,
-    CHECK (end_date >= start_date),          -- IC-11: valid reservation interval
+    CHECK (end_date >= start_date), -- IC-11: valid reservation interval
     FOREIGN KEY (boat_cni) REFERENCES boat(cni)
     -- IC-13 relates reservation and trip dates (trip inside reservation period)
 );
@@ -101,8 +100,7 @@ CREATE TABLE participates (
     PRIMARY KEY (reservation_id, sailor_id),
     FOREIGN KEY (reservation_id) REFERENCES reservation(reservation_id),
     FOREIGN KEY (sailor_id)      REFERENCES sailor(sailor_id)
-    -- IC-5: each reservation has exactly one responsible sailor and that sailor
-    --       must be Senior
+    -- IC-5: each reservation has exactly one responsible sailor and that sailor must be Senior
 );
 
 -- ============================================================================
@@ -118,21 +116,20 @@ CREATE TABLE trip (
     takeoff_date    DATE         NOT NULL,
     arrival_date    DATE         NOT NULL,
     insurance_ref   VARCHAR(60)  NOT NULL,
-    CHECK (arrival_date >= takeoff_date),    -- IC-12: valid trip interval
+    CHECK (arrival_date >= takeoff_date), -- IC-12: valid trip interval
     FOREIGN KEY (reservation_id) REFERENCES reservation(reservation_id),
     FOREIGN KEY (skipper_id)     REFERENCES sailor(sailor_id),
     FOREIGN KEY (start_location) REFERENCES location(location_id),
     FOREIGN KEY (end_location)   REFERENCES location(location_id)
     -- IC-6: skipper must be an authorised participant in the reservation
-    -- IC-10: skipper must have a valid certificate for the boat class,
-    --        jurisdiction(s) and trip dates
+    -- IC-10: skipper must have a valid certificate for the boat class, jurisdiction(s) and trip dates
     -- IC-13: trip dates must lie inside the reservation period
 );
 
 -- association <crosses_by> between Trip and Jurisdiction
 CREATE TABLE crosses (
     trip_id         INTEGER NOT NULL,
-    sequence_no     INTEGER NOT NULL,   -- order in which jurisdictions are crossed
+    sequence_no     INTEGER NOT NULL, -- order in which jurisdictions are crossed
     jurisdiction_id INTEGER NOT NULL,
     PRIMARY KEY (trip_id, sequence_no),
     FOREIGN KEY (trip_id)         REFERENCES trip(trip_id),
@@ -149,7 +146,7 @@ CREATE TABLE certificate (
     class_name      VARCHAR(30) NOT NULL,
     issue_date      DATE        NOT NULL,
     expiry_date     DATE        NOT NULL,
-    CHECK (expiry_date > issue_date),        -- part of IC-9: dates themselves valid
+    CHECK (expiry_date > issue_date), -- part of IC-9: dates themselves valid
     FOREIGN KEY (sailor_id)  REFERENCES sailor(sailor_id),
     FOREIGN KEY (class_name) REFERENCES boat_class(class_name)
     -- IC-9: expired certificates must not authorise future trips
