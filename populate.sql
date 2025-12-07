@@ -6,11 +6,11 @@
 SET search_path TO project;
 
 TRUNCATE TABLE
-    certificate_jurisdiction,
+    valid_in,
     certificate,
-    trip_jurisdiction,
+    crosses,
     trip,
-    reservation_sailor,
+    participates,
     reservation,
     boat,
     boat_class,
@@ -34,12 +34,13 @@ INSERT INTO country (iso_code, name, flag) VALUES
 
 -- ============================================================================
 -- Boat classes - simple classification for boats
+--   (schema now only has class_name + max_length_m)
 -- ============================================================================
 
-INSERT INTO boat_class (class_name, description, max_length_m) VALUES
-('ClassA', 'Small leisure boats',        10.00),
-('ClassB', 'Medium sailing boats',       15.00),
-('Yacht',  'Large yacht / motor vessel', 30.00);
+INSERT INTO boat_class (class_name, max_length_m) VALUES
+('ClassA', 10.00),   -- Small leisure boats
+('ClassB', 15.00),   -- Medium sailing boats
+('Yacht',  30.00);   -- Large yacht / motor vessel
 
 -- ============================================================================
 -- Boats - some boats will be used in trips, some only in reservations, one never used
@@ -96,10 +97,10 @@ INSERT INTO reservation (reservation_id, boat_cni, start_date, end_date) VALUES
 (5, 'SEA-005', DATE '2025-10-01', DATE '2025-10-02');  -- reservation but no trip
 
 -- ============================================================================
--- Reservation_sailor
+-- participates  (Reservation × Sailor)
 -- ============================================================================
 
-INSERT INTO reservation_sailor (reservation_id, sailor_id, is_responsible) VALUES
+INSERT INTO participates (reservation_id, sailor_id, is_responsible) VALUES
 -- Reservation 1 – responsible sailor with surname Santos
 (1, 4, TRUE),
 (1, 3, FALSE),
@@ -141,14 +142,14 @@ INSERT INTO trip (
 (4, 4, 2, 1, 3, DATE '2025-09-01', DATE '2025-09-03', 'INS-004');
 
 -- ============================================================================
--- Trip_jurisdiction - in which waters each trip sails, in order
+-- crosses  (Trip × Jurisdiction) - in which waters each trip sails, in order
 -- ============================================================================
 
-INSERT INTO trip_jurisdiction (trip_id, sequence_no, jurisdiction_id) VALUES
+INSERT INTO crosses (trip_id, sequence_no, jurisdiction_id) VALUES
 (1, 1, 1), (1, 2, 3), -- Trip 1: Portugal → International
-(2, 1, 1), -- Trip 2: Portugal only
+(2, 1, 1),            -- Trip 2: Portugal only
 (3, 1, 1), (3, 2, 2), -- Trip 3: Portugal → Spain
-(4, 1, 3); -- Trip 4: International only
+(4, 1, 3);            -- Trip 4: International only
 
 -- ============================================================================
 -- Certificates - who is allowed to skipper which boat classes (at least on paper…)
@@ -161,10 +162,10 @@ INSERT INTO certificate (certificate_id, sailor_id, class_name, issue_date, expi
 (3, 2, 'ClassA', DATE '2024-05-01', DATE '2026-05-01');  -- Emy Bimond – ClassA only
 
 -- ============================================================================
--- Certificate_jurisdiction - map those certificates to the waters where they’re valid
+-- valid_in  (Certificate × Jurisdiction) - where those certs apply
 -- ============================================================================
 
-INSERT INTO certificate_jurisdiction (certificate_id, jurisdiction_id) VALUES
-(1, 1), -- Joao → Portugal
-(2, 1), (2, 2), -- Gabriel → Portugal + Spain
-(3, 3); -- Emy → International only
+INSERT INTO valid_in (certificate_id, jurisdiction_id) VALUES
+(1, 1),        -- Joao → Portugal
+(2, 1), (2, 2),-- Gabriel → Portugal + Spain
+(3, 3);        -- Emy → International only
