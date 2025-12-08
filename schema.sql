@@ -33,14 +33,14 @@ CREATE TABLE country (
 
 CREATE TABLE boat_class (
     class_name    VARCHAR(30) PRIMARY KEY,
-    max_length_m  NUMERIC(6,2) NOT NULL CHECK (max_length_m > 0)
+    max_length  NUMERIC(6,2) NOT NULL CHECK (max_length > 0)
 );
 
 CREATE TABLE boat (
     cni               VARCHAR(40) PRIMARY KEY,
     name              VARCHAR(80) NOT NULL,
-    length_m          NUMERIC(6,2) NOT NULL CHECK (length_m > 0),
-    registration_year INTEGER     NOT NULL CHECK (registration_year >= 1900),
+    length          NUMERIC(6,2) NOT NULL CHECK (length > 0),
+    year_of_registr INTEGER     NOT NULL CHECK (year_of_registr >= 1900),
     class_name        VARCHAR(30) NOT NULL,
     flag_iso_code     CHAR(3)     NOT NULL,
     picture_url       VARCHAR(300),
