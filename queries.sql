@@ -25,10 +25,10 @@ WHERE t.trip_id IS NULL;
 SELECT DISTINCT b.name
 FROM boat b
 JOIN reservation r ON r.boat_cni = b.cni
-JOIN reservation_sailor rs ON rs.reservation_id = r.reservation_id
-JOIN sailor s ON s.sailor_id = rs.sailor_id
+JOIN participates p ON p.reservation_id = r.reservation_id
+JOIN sailor s ON s.sailor_id = p.sailor_id
 WHERE b.flag_iso_code = 'PRT'
-  AND rs.is_responsible = TRUE
+  AND p.is_responsible = TRUE
   AND s.surname LIKE '%Santos';
 
 -- ============================================================================
@@ -41,5 +41,7 @@ FROM trip t
 JOIN sailor s ON s.sailor_id = t.skipper_id
 JOIN reservation r ON r.reservation_id = t.reservation_id
 JOIN boat b ON b.cni = r.boat_cni
-LEFT JOIN certificate c ON c.sailor_id = s.sailor_id AND c.class_name = b.class_name
+LEFT JOIN certificate c 
+       ON c.sailor_id = s.sailor_id 
+      AND c.class_name = b.class_name
 WHERE c.certificate_id IS NULL;
