@@ -1,6 +1,6 @@
 -- ============================================================================
--- SIBD Project 1 – Boat Management System
--- schema.sql – create schema + base tables
+-- SIBD Project 1 - Boat Management System
+-- schema.sql - create schema + base tables
 -- ============================================================================
 
 CREATE SCHEMA IF NOT EXISTS project;
@@ -46,7 +46,7 @@ CREATE TABLE boat (
     picture_url       VARCHAR(300),
     FOREIGN KEY (class_name)    REFERENCES boat_class(class_name),
     FOREIGN KEY (flag_iso_code) REFERENCES country(iso_code)
-    -- IC-1: boat.length_m must not exceed the max_length_m of its boat_class
+    -- IC-1: boat.length must not exceed the max_length of its boat_class
 );
 
 CREATE TABLE sailor (
@@ -70,7 +70,7 @@ CREATE TABLE location (
 );
 
 CREATE TABLE jurisdiction (
-    jurisdiction_id INTEGER     PRIMARY KEY,
+    jurisdict_id INTEGER     PRIMARY KEY,
     name            VARCHAR(80) NOT NULL,
     type            VARCHAR(30) NOT NULL,
     iso_code        CHAR(3),
@@ -130,10 +130,10 @@ CREATE TABLE trip (
 CREATE TABLE crosses (
     trip_id         INTEGER NOT NULL,
     sequence_no     INTEGER NOT NULL, -- order in which jurisdictions are crossed
-    jurisdiction_id INTEGER NOT NULL,
+    jurisdict_id INTEGER NOT NULL,
     PRIMARY KEY (trip_id, sequence_no),
     FOREIGN KEY (trip_id)         REFERENCES trip(trip_id),
-    FOREIGN KEY (jurisdiction_id) REFERENCES jurisdiction(jurisdiction_id)
+    FOREIGN KEY (jurisdict_id) REFERENCES jurisdiction(jurisdict_id)
 );
 
 -- ============================================================================
@@ -155,8 +155,8 @@ CREATE TABLE certificate (
 -- association <valid_in> between Certificate and Jurisdiction
 CREATE TABLE valid_in (
     certificate_id  INTEGER NOT NULL,
-    jurisdiction_id INTEGER NOT NULL,
-    PRIMARY KEY (certificate_id, jurisdiction_id),
+    jurisdict_id INTEGER NOT NULL,
+    PRIMARY KEY (certificate_id, jurisdict_id),
     FOREIGN KEY (certificate_id)  REFERENCES certificate(certificate_id),
-    FOREIGN KEY (jurisdiction_id) REFERENCES jurisdiction(jurisdiction_id)
+    FOREIGN KEY (jurisdict_id) REFERENCES jurisdiction(jurisdict_id)
 );

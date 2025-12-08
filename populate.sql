@@ -1,6 +1,6 @@
 -- ============================================================================
--- SIBD Project 1 – Boat Management System
--- populate.sql – data to play with and test queries
+-- SIBD Project 1 - Boat Management System
+-- populate.sql - data to play with and test queries
 -- ============================================================================
 
 SET search_path TO project;
@@ -37,7 +37,7 @@ INSERT INTO country (iso_code, name, flag) VALUES
 --   (schema now only has class_name + max_length_m)
 -- ============================================================================
 
-INSERT INTO boat_class (class_name, max_length_m) VALUES
+INSERT INTO boat_class (class_name, max_length) VALUES
 ('ClassA', 10.00),   -- Small leisure boats
 ('ClassB', 15.00),   -- Medium sailing boats
 ('Yacht',  30.00);   -- Large yacht / motor vessel
@@ -46,7 +46,7 @@ INSERT INTO boat_class (class_name, max_length_m) VALUES
 -- Boats - some boats will be used in trips, some only in reservations, one never used
 -- ============================================================================
 
-INSERT INTO boat (cni, name, length_m, registration_year, class_name, flag_iso_code, picture_url) VALUES
+INSERT INTO boat (cni, name, length, year_of_registr, class_name, flag_iso_code, picture_url) VALUES
 ('SEA-001', 'Atlantic Breeze',  8.5,  2018, 'ClassA', 'PRT', 'atlantic_breeze.jpg'),
 ('SEA-002', 'Lusitania Star',  12.0, 2019, 'ClassB', 'PRT', 'lusitania_star.jpg'),
 ('SEA-003', 'Costa del Sol',   11.2, 2020, 'ClassB', 'ESP', 'costa_del_sol.jpg'),
@@ -80,7 +80,7 @@ INSERT INTO location (location_id, name, latitude, longitude, iso_code) VALUES
 -- Jurisdictions
 -- ============================================================================
 
-INSERT INTO jurisdiction (jurisdiction_id, name, type, iso_code) VALUES
+INSERT INTO jurisdiction (jurisdict_id, name, type, iso_code) VALUES
 (1, 'Portugal Coastal Waters',   'National',           'PRT'),
 (2, 'Spain Coastal Waters',      'National',           'ESP'),
 (3, 'Atlantic International',    'International Waters', NULL);
@@ -145,7 +145,7 @@ INSERT INTO trip (
 -- crosses  (Trip × Jurisdiction) - in which waters each trip sails, in order
 -- ============================================================================
 
-INSERT INTO crosses (trip_id, sequence_no, jurisdiction_id) VALUES
+INSERT INTO crosses (trip_id, sequence_no, jurisdict_id) VALUES
 (1, 1, 1), (1, 2, 3), -- Trip 1: Portugal → International
 (2, 1, 1),            -- Trip 2: Portugal only
 (3, 1, 1), (3, 2, 2), -- Trip 3: Portugal → Spain
@@ -165,7 +165,7 @@ INSERT INTO certificate (certificate_id, sailor_id, class_name, issue_date, expi
 -- valid_in  (Certificate × Jurisdiction) - where those certs apply
 -- ============================================================================
 
-INSERT INTO valid_in (certificate_id, jurisdiction_id) VALUES
+INSERT INTO valid_in (certificate_id, jurisdict_id) VALUES
 (1, 1),        -- Joao → Portugal
 (2, 1), (2, 2),-- Gabriel → Portugal + Spain
 (3, 3);        -- Emy → International only
