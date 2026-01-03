@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-#!/usr/bin/env python3
 # web/header.cgi
 
 from ui import print_header, print_footer
