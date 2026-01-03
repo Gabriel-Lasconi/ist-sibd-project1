@@ -62,7 +62,7 @@ def print_footer() -> None:
     print("""
 <footer>
   <hr>
-  <div>Boating Management System - web app prototype</div>
+  <div>Boating Management System - Web App Prototype</div>
 </footer>
 </body>
 </html>
