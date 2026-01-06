@@ -3,7 +3,7 @@
 
 from ui import print_header, print_footer
 
-print_header("Boat Management System Web Prototype")
+print_header("Boat Management System Web App Prototype")
 
 print("""
 <div class="card">
