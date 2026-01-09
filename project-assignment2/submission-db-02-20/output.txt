@@ -1,0 +1,17 @@
+-- Country with the most boats
+Portugal
+
+-- Sailors with at least two certificates
+joao.santos@example.com
+
+-- Sailors who sailed to every location in Portugal
+gabriel.lasconi@example.com
+joao.santos@example.com
+
+-- Sailors with the most skipped trips
+joao.santos@example.com
+luis.garcia@example.com
+
+-- Sailors with the longest summed trip duration per reservation
+gabriel.lasconi@example.com
+
