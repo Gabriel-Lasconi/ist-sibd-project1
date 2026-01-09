@@ -1,0 +1,40 @@
+-- ============================================================================
+-- A. The name of all boats that are used in some trip.
+-- ============================================================================
+
+Query output:
+----------------
+Atlantic Breeze
+Ocean Queen
+Costa del Sol
+Lusitania Star
+----------------
+
+-- ============================================================================
+-- B. The name of all boats that are not used in any trip.
+-- ============================================================================
+
+Query output:
+----------------
+Foggy London
+Harbor Runner
+----------------
+
+-- ============================================================================
+--C. The name of all boats registered in 'PRT' (ISO code) for which at least one responsible for a reservation has a surname that ends with 'Santos'.
+-- ============================================================================
+
+Query output:
+----------------
+Atlantic Breeze
+----------------
+
+-- ============================================================================
+-- D. The full name of all skippers without any certificate corresponding to the class of the trip’s boat.
+-- ============================================================================
+
+Query output:
+----------------
+Emy Bimond
+Luis Garcia
+----------------

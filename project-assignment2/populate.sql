@@ -101,6 +101,14 @@ INSERT INTO valid_for (country_name, max_length, sailor, issue_date) VALUES
 ('Portugal', 10.00, 'joao.santos@example.com', TIMESTAMP '2024-01-10 09:00:00'),
 ('Spain',    10.00, 'joao.santos@example.com', TIMESTAMP '2024-01-10 09:00:00');
 
+-- Joao Santos: classB certificate, valid in Portugal
+INSERT INTO sailing_certificate (issue_date, expiry_date, sailor, boat_class) VALUES
+(TIMESTAMP '2024-02-01 10:00:00', TIMESTAMP '2027-02-01 00:00:00',
+ 'joao.santos@example.com', 'ClassB');
+
+INSERT INTO valid_for (country_name, max_length, sailor, issue_date) VALUES
+('Portugal', 15.00, 'joao.santos@example.com', TIMESTAMP '2024-02-01 10:00:00');
+
 -- Gabriel Lasconi: ClassB certificate, valid in Portugal + Spain + Romania
 INSERT INTO sailing_certificate (issue_date, expiry_date, sailor, boat_class) VALUES
 (TIMESTAMP '2023-03-05 10:30:00', TIMESTAMP '2026-03-05 00:00:00', 'gabriel.lasconi@example.com', 'ClassB');

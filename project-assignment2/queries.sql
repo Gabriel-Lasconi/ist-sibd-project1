@@ -32,8 +32,10 @@ WHERE NOT EXISTS (
           SELECT 1
           FROM trip t
           WHERE t.skipper = s.email
-            AND t.to_latitude  = l.latitude
-            AND t.to_longitude = l.longitude
+            AND (
+                 (t.to_latitude   = l.latitude AND t.to_longitude   = l.longitude)
+              OR (t.from_latitude = l.latitude AND t.from_longitude = l.longitude)
+            )
       )
 );
 
@@ -47,8 +49,7 @@ LEFT JOIN trip t
  AND t.reservation_end_date   = a.end_date
  AND t.boat_country           = a.boat_country
  AND t.cni                    = a.cni
- AND t.skipper                = a.sailor
-WHERE t.skipper IS NULL
+WHERE t.takeoff IS NULL
 GROUP BY a.sailor
 HAVING COUNT(*) >= ALL (
     SELECT COUNT(*)
@@ -58,8 +59,7 @@ HAVING COUNT(*) >= ALL (
      AND t2.reservation_end_date   = a2.end_date
      AND t2.boat_country           = a2.boat_country
      AND t2.cni                    = a2.cni
-     AND t2.skipper                = a2.sailor
-    WHERE t2.skipper IS NULL
+    WHERE t2.takeoff IS NULL
     GROUP BY a2.sailor
 );
 
